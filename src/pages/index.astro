@@ -1,0 +1,54 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const allPosts = await getCollection('posts', ({ data }) => !data.draft);
+allPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+const allTags = [...new Set(allPosts.flatMap(p => p.data.tags))].sort();
+
+function formatDate(date: Date) {
+  return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: '2-digit' });
+}
+---
+
+<BaseLayout>
+  <div class="tags" id="tag-filter">
+    <button class="tag active" data-tag="all">All</button>
+    {allTags.map(tag => (
+      <button class="tag" data-tag={tag}>{tag}</button>
+    ))}
+  </div>
+
+  <ul class="post-list" id="post-list">
+    {allPosts.map(post => (
+      <li class="post-item" data-tags={post.data.tags.join(',')}>
+        <span class="post-date">{formatDate(post.data.date)}</span>
+        <a class="post-title-link" href={`/posts/${post.id}`}>{post.data.title}</a>
+      </li>
+    ))}
+  </ul>
+</BaseLayout>
+
+<script>
+  const tagButtons = document.querySelectorAll<HTMLButtonElement>('#tag-filter .tag');
+  const postItems = document.querySelectorAll<HTMLLIElement>('#post-list .post-item');
+
+  tagButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const selected = btn.dataset.tag ?? 'all';
+
+      tagButtons.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
+      postItems.forEach(item => {
+        if (selected === 'all') {
+          item.style.display = '';
+        } else {
+          const tags = (item.dataset.tags ?? '').split(',');
+          item.style.display = tags.includes(selected) ? '' : 'none';
+        }
+      });
+    });
+  });
+</script>
