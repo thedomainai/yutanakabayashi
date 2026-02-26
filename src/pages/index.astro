@@ -32,7 +32,7 @@ function formatDate(date: Date) {
 
 <script>
   const tagButtons = document.querySelectorAll<HTMLButtonElement>('#tag-filter .tag');
-  const postItems = document.querySelectorAll<HTMLLIElement>('#post-list .post-item');
+  const postItems  = document.querySelectorAll<HTMLLIElement>('#post-list .post-item');
 
   tagButtons.forEach(btn => {
     btn.addEventListener('click', () => {
@@ -41,12 +41,19 @@ function formatDate(date: Date) {
       tagButtons.forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
 
+      let visibleIndex = 0;
       postItems.forEach(item => {
-        if (selected === 'all') {
-          item.style.display = '';
-        } else {
-          const tags = (item.dataset.tags ?? '').split(',');
-          item.style.display = tags.includes(selected) ? '' : 'none';
+        item.classList.remove('animate-in');
+
+        const show = selected === 'all' || (item.dataset.tags ?? '').split(',').includes(selected);
+        item.style.display = show ? '' : 'none';
+
+        if (show) {
+          // reflow を挟むことで animation が再トリガーされる
+          void item.offsetWidth;
+          item.style.animationDelay = `${visibleIndex * 45}ms`;
+          item.classList.add('animate-in');
+          visibleIndex++;
         }
       });
     });

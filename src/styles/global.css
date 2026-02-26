@@ -1,12 +1,12 @@
 /* ─── Custom Properties ───────────────────────────────── */
 :root {
-  --bg: #faf9f7;
-  --bg-secondary: #f0ede8;
-  --text: #1a1917;
-  --text-muted: #6b6862;
-  --border: #ddd9d3;
-  --link: #1a1917;
-  --link-hover: #5a5a5a;
+  --bg: #f5ede3;
+  --bg-secondary: #ece3d6;
+  --text: #1a1614;
+  --text-muted: #6b6560;
+  --border: #d9d0c5;
+  --link: #1a1614;
+  --link-hover: #5a5450;
   --accent: #2c5f4a;
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
   --font-mono: 'Fira Code', 'Cascadia Code', ui-monospace, monospace;
@@ -19,13 +19,13 @@
 }
 
 [data-theme="dark"] {
-  --bg: #1a1917;
-  --bg-secondary: #252320;
-  --text: #e8e4dc;
-  --text-muted: #948f87;
-  --border: #38352f;
-  --link: #e8e4dc;
-  --link-hover: #b8b2a8;
+  --bg: #100f0d;
+  --bg-secondary: #1c1a17;
+  --text: #e8e2d5;
+  --text-muted: #8a8479;
+  --border: #302c26;
+  --link: #e8e2d5;
+  --link-hover: #b8b09f;
   --accent: #6aab8f;
 }
 
@@ -47,8 +47,53 @@ body {
   background-color: var(--bg);
   color: var(--text);
   line-height: 1.7;
-  transition: background-color 0.2s, color 0.2s;
+  transition: background-color 0.3s, color 0.3s;
   padding: 0 var(--space-md);
+}
+
+/* ─── Grain overlay ───────────────────────────────────── */
+.grain {
+  position: fixed;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  pointer-events: none;
+  z-index: 9998;
+  opacity: 0.045;
+  mix-blend-mode: overlay;
+}
+
+/* ─── Custom Cursor ───────────────────────────────────── */
+.cursor {
+  position: fixed;
+  width: 8px;
+  height: 8px;
+  background: var(--text);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  transition: width 0.2s cubic-bezier(0.25, 0.1, 0.25, 1),
+              height 0.2s cubic-bezier(0.25, 0.1, 0.25, 1),
+              background 0.2s,
+              opacity 0.3s;
+  opacity: 0;
+  will-change: left, top;
+}
+
+.cursor--hover {
+  width: 24px;
+  height: 24px;
+  background: transparent;
+  outline: 1.5px solid var(--text);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  body,
+  a,
+  button { cursor: none; }
+  .cursor { opacity: 1; }
 }
 
 /* ─── Layout ──────────────────────────────────────────── */
@@ -59,9 +104,20 @@ body {
 
 /* ─── Header ──────────────────────────────────────────── */
 header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
   padding: var(--space-lg) 0;
   border-bottom: 1px solid var(--border);
   margin-bottom: var(--space-xl);
+  background-color: var(--bg);
+  transition: background-color 0.3s, backdrop-filter 0.3s, border-color 0.3s;
+}
+
+header.header--scrolled {
+  background-color: color-mix(in srgb, var(--bg) 80%, transparent);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
 }
 
 .header-inner {
@@ -101,7 +157,7 @@ nav a:hover {
   background: none;
   border: 1px solid var(--border);
   border-radius: 4px;
-  cursor: pointer;
+  cursor: none;
   color: var(--text-muted);
   font-size: 0.75rem;
   padding: 2px 8px;
@@ -204,6 +260,30 @@ img {
   border-radius: 4px;
 }
 
+/* ─── Prose ───────────────────────────────────────────── */
+.prose {
+  font-size: 1rem;
+  line-height: 1.75;
+}
+
+.prose p:last-child {
+  margin-bottom: 0;
+}
+
+/* 筆描きアンダーライン */
+.prose a {
+  text-decoration: none;
+  background-image: linear-gradient(currentColor, currentColor);
+  background-position: 0% 100%;
+  background-repeat: no-repeat;
+  background-size: 0% 1px;
+  transition: background-size 0.35s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+.prose a:hover {
+  background-size: 100% 1px;
+}
+
 /* ─── Post List ───────────────────────────────────────── */
 .post-list {
   list-style: none;
@@ -216,10 +296,31 @@ img {
   gap: var(--space-md);
   padding: 0.5rem 0;
   border-bottom: 1px solid var(--border);
+  transition: transform 0.25s cubic-bezier(0.25, 0.1, 0.25, 1);
 }
 
 .post-item:last-child {
   border-bottom: none;
+}
+
+.post-item:hover {
+  transform: translateX(6px);
+}
+
+/* スタガーアニメーション */
+@keyframes item-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.post-item.animate-in {
+  animation: item-in 0.3s cubic-bezier(0.25, 0.1, 0.25, 1) both;
 }
 
 .post-date {
@@ -236,12 +337,9 @@ img {
   text-decoration: none;
   color: var(--text);
   transition: color 0.15s;
-  text-underline-offset: 3px;
 }
 
 .post-title-link:hover {
-  text-decoration: underline;
-  text-decoration-color: var(--border);
   color: var(--link-hover);
 }
 
@@ -260,10 +358,10 @@ img {
   border-radius: 20px;
   color: var(--text-muted);
   text-decoration: none;
-  cursor: pointer;
+  cursor: none;
   background: none;
   font-family: var(--font-sans);
-  transition: background 0.15s, color 0.15s;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
 }
 
 .tag:hover,
@@ -303,16 +401,6 @@ img {
 .post-tag:hover {
   color: var(--text);
   text-decoration: none;
-}
-
-/* ─── Prose ───────────────────────────────────────────── */
-.prose {
-  font-size: 1rem;
-  line-height: 1.75;
-}
-
-.prose p:last-child {
-  margin-bottom: 0;
 }
 
 /* ─── Page title ──────────────────────────────────────── */
