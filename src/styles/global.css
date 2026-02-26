@@ -60,8 +60,7 @@ body {
   height: 200%;
   pointer-events: none;
   z-index: 9998;
-  opacity: 0.045;
-  mix-blend-mode: overlay;
+  opacity: 0.09;
 }
 
 /* ─── Custom Cursor ───────────────────────────────────── */
@@ -83,8 +82,8 @@ body {
 }
 
 .cursor--hover {
-  width: 24px;
-  height: 24px;
+  width: 18px;
+  height: 18px;
   background: transparent;
   outline: 1.5px solid var(--text);
 }
