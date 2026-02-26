@@ -1,13 +1,13 @@
 /* ─── Custom Properties ───────────────────────────────── */
 :root {
-  --bg: #f5ede3;
-  --bg-secondary: #ece3d6;
-  --text: #1a1614;
-  --text-muted: #6b6560;
-  --border: #d9d0c5;
-  --link: #1a1614;
-  --link-hover: #5a5450;
-  --accent: #2c5f4a;
+  --bg: #ffffff;
+  --bg-secondary: #f0f3ff;
+  --text: #0f0f14;
+  --text-muted: #6b6e80;
+  --border: #e0e3f0;
+  --link: #0f0f14;
+  --link-hover: #4a4d60;
+  --accent: #5b7fff;
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
   --font-mono: 'Fira Code', 'Cascadia Code', ui-monospace, monospace;
   --max-width: 680px;
@@ -19,14 +19,14 @@
 }
 
 [data-theme="dark"] {
-  --bg: #100f0d;
-  --bg-secondary: #1c1a17;
-  --text: #e8e2d5;
-  --text-muted: #8a8479;
-  --border: #302c26;
-  --link: #e8e2d5;
-  --link-hover: #b8b09f;
-  --accent: #6aab8f;
+  --bg: #0c0d11;
+  --bg-secondary: #13151c;
+  --text: #e8eaf2;
+  --text-muted: #7a7d92;
+  --border: #232535;
+  --link: #e8eaf2;
+  --link-hover: #a8aabf;
+  --accent: #7b9fff;
 }
 
 /* ─── Reset ───────────────────────────────────────────── */
@@ -47,20 +47,28 @@ body {
   background-color: var(--bg);
   color: var(--text);
   line-height: 1.7;
-  transition: background-color 0.3s, color 0.3s;
+  transition: background-color 0.4s, color 0.3s;
   padding: 0 var(--space-md);
 }
 
-/* ─── Grain overlay ───────────────────────────────────── */
-body::after {
-  content: '';
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 9998;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E");
-  background-size: 200px 200px;
-  opacity: 0.20;
+/* ─── Liquid glass background mesh ───────────────────── */
+html {
+  background-color: var(--bg);
+  background-image:
+    radial-gradient(ellipse at 15% 20%, rgba(190, 215, 255, 0.45) 0%, transparent 55%),
+    radial-gradient(ellipse at 85% 12%, rgba(215, 190, 255, 0.30) 0%, transparent 50%),
+    radial-gradient(ellipse at 55% 88%, rgba(185, 235, 255, 0.30) 0%, transparent 55%),
+    radial-gradient(ellipse at 92% 72%, rgba(255, 200, 230, 0.20) 0%, transparent 45%);
+  background-attachment: fixed;
+  transition: background-color 0.4s;
+}
+
+html[data-theme="dark"] {
+  background-image:
+    radial-gradient(ellipse at 15% 20%, rgba(80, 100, 180, 0.18) 0%, transparent 55%),
+    radial-gradient(ellipse at 85% 12%, rgba(100, 70, 160, 0.14) 0%, transparent 50%),
+    radial-gradient(ellipse at 55% 88%, rgba(60, 120, 180, 0.14) 0%, transparent 55%),
+    radial-gradient(ellipse at 92% 72%, rgba(140, 60, 100, 0.10) 0%, transparent 45%);
 }
 
 /* ─── Custom Cursor ───────────────────────────────────── */
